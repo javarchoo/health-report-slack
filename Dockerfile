@@ -8,7 +8,7 @@
 
 FROM ubuntu:16.04
 RUN  apt update && \
-     apt install pip -y && \
+     apt install python-pip -y && \
      pip install slacker && \
      mkdir -p /opt/ceph-health/data
 COPY get_ceph_health.sh /opt/ceph-health/get_ceph_health.sh
