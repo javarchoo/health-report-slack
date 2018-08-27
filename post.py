@@ -34,16 +34,20 @@ def post_slack():
             else:
                 sr[result] = site
 
-        body = "*_# Ceph Health Check Detail_*\n"
-        files = ["cicd", "dev", "stg", "prd"]
-        for f in files:
-            if 'HEALTH_OK' != dic["ceph-"+f]:
-                f_name = data_dir + "/ceph-" + f
-                tf = open(f_name,"r")
-                body += ">*ceph-" + f + "*\n"
-                body += ">```\n"
-                body += tf.read()
-                body += "```\n\n"
+        body = ""
+        if len(sr.keys()) == 1 and "HEALTH_OK" in sr.keys():
+            body += ""
+        else:
+            body += "*_# Ceph Health Check Detail_*\n"
+            files = ["cicd", "dev", "stg", "prd"]
+            for f in files:
+                if 'HEALTH_OK' != dic["ceph-"+f]:
+                    f_name = data_dir + "/ceph-" + f
+                    tf = open(f_name,"r")
+                    body += ">*ceph-" + f + "*\n"
+                    body += ">```\n"
+                    body += tf.read()
+                    body += "```\n\n"
 
         body += "*_# Ceph Health Check Simple_*\n"
         body += ">```\n"
