@@ -25,19 +25,19 @@ def post_slack():
         for line in lines:
             dic[line.split('\t')[0].replace(":", "")] = line.split('\t')[1].replace("\n","")
 
-        body = "#" * 30 + "\n# Ceph Health Check Detail\n" + "#" * 30 + "\n"
+        body = "*_# Ceph Health Check Detail_*\n"
         files = ["cicd", "dev", "stg", "prd"]
         for f in files:
             if 'HEALTH_OK' != dic["ceph-"+f]:
                 f_name = data_dir + "/ceph-" + f
                 tf = open(f_name,"r")
-                body+="ceph-" + f + "\n"
-                body+="```\n"
+                body+=">*ceph-" + f + "*\n"
+                body+=">```\n"
                 body+=tf.read()
                 body+="```\n\n"
 
-        body += "#" * 30 + "\n# Ceph Health Check Simple\n" + "#" * 30 + "\n"
-        body+="```\n"
+        body += "*_# Ceph Health Check Simple_*\n"
+        body+=">```\n"
         f_name = work_dir + "/cephstatuslist"
         body += open(f_name, "r").read()
         body+="```"
