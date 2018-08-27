@@ -16,12 +16,12 @@ def post_slack():
         token=sys.argv[2]
         slack = Slacker(token)
 
-        work_dir="/root/ceph-health"
-        data_dir="/root/ceph-health/data"
+        work_dir="/opt/ceph-health"
+        data_dir="/opt/ceph-health/data"
 
 
         dic = {}
-        lines = open("/root/ceph-health/cephstatuslist", "r").readlines()
+        lines = open("/opt/ceph-health/cephstatuslist", "r").readlines()
         for line in lines:
             dic[line.split('\t')[0].replace(":", "")] = line.split('\t')[1].replace("\n","")
 

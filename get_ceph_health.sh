@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set Env
-WORK_DIR=/root/ceph-health
+WORK_DIR=/opt/ceph-health
 DATA_DIR=$WORK_DIR/data
 
 # Get Ceph Status
