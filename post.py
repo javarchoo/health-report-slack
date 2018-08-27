@@ -17,13 +17,22 @@ def post_slack():
         slack = Slacker(token)
 
         work_dir="/opt/ceph-health"
-        data_dir="/opt/ceph-health/data"
-
+        data_dir=work_dir+"/data"
 
         dic = {}
-        lines = open("/opt/ceph-health/cephstatuslist", "r").readlines()
+        sr = {}
+
+        lines = open(work_dir+"/cephstatuslist", "r").readlines()
         for line in lines:
-            dic[line.split('\t')[0].replace(":", "")] = line.split('\t')[1].replace("\n","")
+            site = line.split('\t')[0].replace(":", "")
+            result = line.split('\t')[1].replace("\n","")
+
+            dic[site] = result
+
+            if result in sr:
+                sr[result] = sr[result] + ", " + site
+            else:
+                sr[result] = site
 
         body = "*_# Ceph Health Check Detail_*\n"
         files = ["cicd", "dev", "stg", "prd"]
@@ -31,15 +40,16 @@ def post_slack():
             if 'HEALTH_OK' != dic["ceph-"+f]:
                 f_name = data_dir + "/ceph-" + f
                 tf = open(f_name,"r")
-                body+=">*ceph-" + f + "*\n"
-                body+=">```\n"
-                body+=tf.read()
-                body+="```\n\n"
+                body += ">*ceph-" + f + "*\n"
+                body += ">```\n"
+                body += tf.read()
+                body += "```\n\n"
 
         body += "*_# Ceph Health Check Simple_*\n"
-        body+=">```\n"
-        f_name = work_dir + "/cephstatuslist"
-        body += open(f_name, "r").read()
+        body += ">```\n"
+        for k in ["OK", "WARN", "ERROR"]:
+            if "HEALTH_"+k in sr.keys():
+               body += (k + ":\t" + sr["HEALTH_"+k])
         body+="```"
 
         channel = "#" + sys.argv[1]
