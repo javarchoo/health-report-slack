@@ -53,7 +53,7 @@ def post_slack():
         body += ">```\n"
         for k in ["OK", "WARN", "ERROR"]:
             if "HEALTH_"+k in sr.keys():
-               body += (k + ":\t" + sr["HEALTH_"+k])
+               body += ((k + ":").ljust(8) + sr["HEALTH_"+k]+"\n")
         body+="```"
 
         channel = "#" + sys.argv[1]
